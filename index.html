@@ -33,6 +33,7 @@
 			/*overflow: hidden;*/
 			margin-top: 0;
 			margin-bottom: 0;
+
 		}
 
 		#blogTitle li {
@@ -47,9 +48,6 @@
 		}
 
 		#blogTitle{
-			/*float: left;*/
-			/*background: #BBDEFB;*/
-			/*background-color: #90CAF9;*/
 			border-right: solid 5px #90CAF9; 
 			background-color: white; 
 			z-index: 100;
@@ -61,14 +59,16 @@
 			/*display: block;*/
 			left: 0px;
 			top: 60px;
+			padding-top: 15px; 
 			/*margin: 20px 0px;*/
 			transition: all 0.2s linear;
 		}
 
 		#blogContent{
 			
-			padding: 60px 20px 20px 50px;
+			padding: 30px 20px 20px 50px;
 			/*padding-left: 50px;*/
+			margin-top: 60px;
 			margin-left: 350px;
 			transition: all 0.2s linear;
 		}
@@ -79,6 +79,7 @@
 			margin-left: 15px;
 			text-align: center;
 			left: 20px;	
+			float: left;
 			display: none;
 		}
 
@@ -96,9 +97,36 @@
 		    display: inline-block;
 		    width: 2em;
 		    height: 2em;
-		    fill: #4FC3F7;
+		    fill: #fff;
 		    /*fill: currentColor;*/
 		}
+
+		#about {
+			font-weight: 900;
+			font-size: 1.3em;
+			float: right;
+			/*position: fixed;*/
+			padding: 20px 10px 15px 10px;
+			color: white;
+			/*left: 10px;*/
+		}
+		#about:hover {
+			cursor: pointer;
+			border-bottom: solid 5px white;
+		}
+
+		.meImage {
+			width: 180px;
+			height: 180px;
+			border-radius: 50%;
+			border: solid 3px #2196F3 ;
+		}
+		 blockquote {
+	        margin-left: 15px;
+	        padding: 1px 10px;
+	        border-left: lightgray solid 5px;
+	        color: gray;
+	    }
 
 		@media screen and (max-width: 600px){
 
@@ -113,13 +141,95 @@
 			}
 
 			#blogContent{
-				padding-left: 0px;
+				/*padding-left: 0px;*/
 				margin-left: 0px;
+				padding: 10px;
 				/*display:none;*/
 			}
 		}
 
+
 	</style>
+
+	<style type="text/css">
+		.base {
+		  height: 9em;
+		  left: 50%;
+		  margin: -7.5em;
+		  padding: 3em;
+		  position: relative;
+			margin-top: 20%;
+		  width: 9em;
+		  transform: rotateX(45deg) rotateZ(45deg);
+		  transform-style: preserve-3d;
+		}
+
+		.cube,
+		.cube:after,
+		.cube:before {
+		  content: '';
+		  float: left;
+		  height: 3em;
+		  position: absolute;
+		  width: 3em;
+		}
+
+		/* Top */
+		.cube {
+		  background-color: #05afd1;
+		  position: relative;
+		  transform: translateZ(3em);
+		  transform-style: preserve-3d;
+		  transition: .25s;
+		  box-shadow: 13em 13em 1.5em rgba(0, 0, 0, 0.1);
+		  animation: anim 1s infinite;
+		}
+		.cube:after {
+		  background-color: #049dbc;
+		  transform: rotateX(-90deg) translateY(3em);
+		  transform-origin: 100% 100%;
+		}
+		.cube:before {
+		  background-color: #048ca7;
+		  transform: rotateY(90deg) translateX(3em);
+		  transform-origin: 100% 0;
+		}
+		.cube:nth-child(1) {
+		  animation-delay: 0.05s;
+		}
+		.cube:nth-child(2) {
+		  animation-delay: 0.1s;
+		}
+		.cube:nth-child(3) {
+		  animation-delay: 0.15s;
+		}
+		.cube:nth-child(4) {
+		  animation-delay: 0.2s;
+		}
+		.cube:nth-child(5) {
+		  animation-delay: 0.25s;
+		}
+		.cube:nth-child(6) {
+		  animation-delay: 0.3s;
+		}
+		.cube:nth-child(7) {
+		  animation-delay: 0.35s;
+		}
+		.cube:nth-child(8) {
+		  animation-delay: 0.4s;
+		}
+		.cube:nth-child(9) {
+		  animation-delay: 0.45s;
+		}
+
+		@keyframes anim {
+		  50% {
+		    transform: translateZ(0.5em);
+		  }
+		}
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
 
 </head>
 <body class="">
@@ -137,70 +247,25 @@
 		<div class="icons" id="list-icon" onclick="showList()">
 	        <svg class="icon icon-list"><use xlink:href="#icon-list"></use></svg>
 	    </div>
+
+	    <div id="about" onclick="about()">
+	    	Ablout
+	    </div>
     </header>
 
 	<!--  -->
 	<div id="blogContent" onclick="hiddenList()">
-		<p>blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
-		<p>blogConten</p>
+		
 	</div>
 
 
 	<ul id="blogTitle" class="rightBoxShadow">			
 	</ul>
+
+
+	<script type="text/javascript">
+		window.loading = "<div class='base'><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div></div>"
+	</script>
 
 	<script type="text/javascript">
 		function showList () {
@@ -281,7 +346,6 @@
 			makeRequest("/blogs", function blogs (data) {
 				data = JSON.parse(data);
 				var str = "";
-
 				for (var i = 0; i < data.length; i++) {
 					var item = data[i];
 					var cell = liCell;
@@ -296,14 +360,24 @@
 		}
 
 		function requestBlog (elem, event) {
-			
 			hiddenList()
-			
-			
 			var id = elem.getAttribute("id");
+			blogContent.innerHTML = window.loading;
 			makeRequest("/blog/"+id, function blog (data) {
-				console.log(data)	
-			})
+				console.log(data);
+				var time = setTimeout(function () {
+					blogContent.innerHTML = "window.loading";
+					clearTimeout(time)
+				}, 3000);
+			});
+		}
+
+		function about () {
+			blogContent.innerHTML = window.loading;
+			makeRequest("/about", function blog (data) {
+				console.log(data);
+				blogContent.innerHTML = marked(data);
+			})	
 		}
 
 	</script>
@@ -313,15 +387,13 @@
 	<script type="text/javascript">
 		window.onload = function () {
 			requestTitle()
-
 			var w = window,
 			    d = document,
 			    e = d.documentElement,
 			    g = d.getElementsByTagName('body')[0],
 			    x = w.innerWidth || e.clientWidth || g.clientWidth,
 			    y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-
-			blogTitle.style.height = (y - 65)+"px"
+			blogTitle.style.height = (y - 75)+"px"
 		}
 
 		window.onresize = function(event) {
