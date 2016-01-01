@@ -24,6 +24,7 @@
 			width: 100%;
 			height: 60px;
 			background-color: #2196F3;
+			color: white;
 		}
 
 		.boxShadow {
@@ -60,7 +61,7 @@
 			position: fixed;
 			/*position: fixed;*/
 			overflow-y: scroll;
-			width: 300px;
+			width: 275px;
 			/*display: block;*/
 			left: 0px;
 			top: 60px;
@@ -101,12 +102,14 @@
 		.icon {
 		    display: inline-block;
 		    width: 2em;
-		    height: 2em;
+		    height: 1.8em;
 		    fill: #fff;
 		    /*fill: currentColor;*/
 		}
 
-		#about {
+
+
+		#about, #stay {
 			font-weight: 900;
 			font-size: 1.3em;
 			float: right;
@@ -115,6 +118,13 @@
 			color: white;
 			/*left: 10px;*/
 		}
+
+		#stay {
+			padding: 27px 15px 15px 10px;
+			font-weight: 100;
+			font-size: 0.6em;
+		}
+
 		#about:hover {
 			cursor: pointer;
 			border-bottom: solid 5px white;
@@ -252,9 +262,13 @@
 		<div class="icons" id="list-icon" onclick="showList()">
 	        <svg class="icon icon-list"><use xlink:href="#icon-list"></use></svg>
 	    </div>
-
+	    
 	    <div id="about" onclick="about()">
 	    	Ablout
+	    </div>
+
+	    <div id="stay" >
+	    	Stay hungry, Stay foolish	
 	    </div>
     </header>
 
