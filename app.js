@@ -35,7 +35,7 @@ function app (req, res) {
     let clientUa = req.headers['user-agent'];
 
 	if (path === "/") {
-		let record = `${clientIp} ${clientUa} \n`
+		let record = new Date + ` -- ${clientIp} -- ${clientUa} \n`
 		// console.log(record)
 		fs.appendFile('log', record, function (err) {
 			if (err) throw err;
