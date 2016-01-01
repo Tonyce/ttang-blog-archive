@@ -13,19 +13,19 @@
 			padding: 0;
 		}
 
-		.flex-layout {
-		    display: -webkit-flex;
-		    display: flex;
-		    justify-content: flex-start;
-		}
-		.row {
-		    -webkit-flex-direction: row;
-		    flex-direction: row;
+		header {
+			position: fixed;
+			top: 0;
+			width: 100%;
+			height: 60px;
+			background-color: #2196F3;
 		}
 
-		.column {
-		    -webkit-flex-direction: column;
-		    flex-direction: column;
+		.boxShadow {
+			box-shadow: 0px 5px 5px -4px gray;
+		}
+		.rightBoxShadow {
+			/*box-shadow: 0px 5px -5px 4px gray;	*/
 		}
 
 		ul {
@@ -36,19 +36,22 @@
 		}
 
 		#blogTitle li {
-
 			border-bottom: solid 1px black;
 			padding: 15px 10px 15px 0px;
-			transition: all 0.5s linear;
+			transition: all 0.2s linear;
 		}
 		#blogTitle li:hover {
 			cursor:pointer;
-			background: grey;
+			background: #2196F3;
+			color: white;
 		}
 
 		#blogTitle{
 			/*float: left;*/
-			/*background: gray;*/
+			/*background: #BBDEFB;*/
+			/*background-color: #90CAF9;*/
+			border-right: solid 5px #90CAF9; 
+			background-color: white; 
 			z-index: 100;
 			height: 100%;
 			position: fixed;
@@ -57,34 +60,56 @@
 			width: 300px;
 			/*display: block;*/
 			left: 0px;
-			top: 0px;
+			top: 60px;
 			/*margin: 20px 0px;*/
-			transition: all 0.5s linear;
-			transition-delay: 0.2s;
+			transition: all 0.2s linear;
 		}
 
 		#blogContent{
 			
-			/*position: absolute;*/
-			/*top: 0;*/
-
-			/*right: 0;*/
-			padding-left: 50px;
-			height: 300px;
+			padding: 60px 20px 20px 50px;
+			/*padding-left: 50px;*/
 			margin-left: 350px;
-			/*width: auto;*/
-			background: red;
-			transition: all 0.5s linear;
-			transition-delay: 0.2s;
-			
+			transition: all 0.2s linear;
+		}
+
+
+		#list-icon {
+			padding-top: 15px;
+			margin-left: 15px;
+			text-align: center;
+			left: 20px;	
+			display: none;
+		}
+
+		#list-icon:hover {
+			cursor: pointer;
+		}
+
+		.icons {
+			height: 43px;
+			width: 50px;
+		}
+
+		
+		.icon {
+		    display: inline-block;
+		    width: 2em;
+		    height: 2em;
+		    fill: #4FC3F7;
+		    /*fill: currentColor;*/
 		}
 
 		@media screen and (max-width: 600px){
 
+			#list-icon {
+				display: block;
+			}
+
 			#blogTitle{
 				left: -350px;
 				position: absolute;
-				/*display: none;*/
+				/**/
 			}
 
 			#blogContent{
@@ -97,13 +122,26 @@
 	</style>
 
 </head>
-<body class="" >
-	<!-- <div > -->
-	
-	<!-- </div> -->
+<body class="">
+
+<svg style="position: absolute; width: 0; height: 0;" width="0" height="0" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+<symbol id="icon-list" viewBox="0 0 1024 1024">
+<title>list</title>
+<path class="path1" d="M0 0h256v256h-256zM384 64h640v128h-640zM0 384h256v256h-256zM384 448h640v128h-640zM0 768h256v256h-256zM384 832h640v128h-640z"></path>
+</symbol>
+</defs>
+</svg>
+
+	<header class="boxShadow">
+		<div class="icons" id="list-icon" onclick="showList()">
+	        <svg class="icon icon-list"><use xlink:href="#icon-list"></use></svg>
+	    </div>
+    </header>
 
 	<!--  -->
-	<div id="blogContent">
+	<div id="blogContent" onclick="hiddenList()">
+		<p>blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten blogConten</p>
 		<p>blogConten</p>
 		<p>blogConten</p>
 		<p>blogConten</p>
@@ -158,18 +196,41 @@
 		<p>blogConten</p>
 		<p>blogConten</p>
 		<p>blogConten</p>
-		<p>blogConten</p>
-
 	</div>
 
-	<!-- <div id="blogTitle"> -->
-		<ul id="blogTitle">
+
+	<ul id="blogTitle" class="rightBoxShadow">			
+	</ul>
+
+	<script type="text/javascript">
+		function showList () {
+			if (blogTitle.style.left === "0px") {
+				blogTitle.style.left = "-350px";
+				// blogContent.style.display = "block";
+				blogContent.style.position = ""
+			}else {
+				blogTitle.style.left = "0px";
+				// blogContent.style.display = "none";
+				blogContent.style.position = "fixed"
+			}
+		}
+
+		function hiddenList () {
+
+			var w = window,
+			    d = document,
+			    e = d.documentElement,
+			    g = d.getElementsByTagName('body')[0],
+			    x = w.innerWidth || e.clientWidth || g.clientWidth,
+			    y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+			if (x <= 600) {
+				blogTitle.style.left = "-350px";
+				blogContent.style.position = ""
+			}
 			
-		</ul>
-	<!-- </div> -->
-
-	
-
+			// blogContent.style.display = "block";	
+		}
+	</script>
 	<script type="text/javascript">
 
 		(function () {
@@ -235,6 +296,10 @@
 		}
 
 		function requestBlog (elem, event) {
+			
+			hiddenList()
+			
+			
 			var id = elem.getAttribute("id");
 			makeRequest("/blog/"+id, function blog (data) {
 				console.log(data)	
@@ -243,10 +308,37 @@
 
 	</script>
 
+	
+
 	<script type="text/javascript">
 		window.onload = function () {
 			requestTitle()
+
+			var w = window,
+			    d = document,
+			    e = d.documentElement,
+			    g = d.getElementsByTagName('body')[0],
+			    x = w.innerWidth || e.clientWidth || g.clientWidth,
+			    y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+			blogTitle.style.height = (y - 65)+"px"
 		}
+
+		window.onresize = function(event) {
+		    
+		    var w = window,
+			    d = document,
+			    e = d.documentElement,
+			    g = d.getElementsByTagName('body')[0],
+			    x = w.innerWidth || e.clientWidth || g.clientWidth,
+			    y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+			blogTitle.style.height = (y - 65)+"px"
+			if (x > 600) {
+				blogTitle.style.left = ""
+				blogContent.style.display = ""
+			}
+		};
 	</script>
 </body>
 </html>
