@@ -28,7 +28,18 @@ function app (req, res) {
 	let path = reqUrlObj["pathname"].toLowerCase();
 	// let pathList = path.split('/');
 
+	let clientIp =  req.headers['x-forwarded-for'] || 
+     				req.connection.remoteAddress || 
+     				req.socket.remoteAddress ||
+     				req.connection.socket.remoteAddress;
+    let clientUa = req.headers['user-agent'];
+
 	if (path === "/") {
+		let record = `${clientIp} ${clientUa} \n`
+		console.log(record)
+		fs.appendFile('log', record, function (err) {
+			if (err) throw err;
+		});
 		fs.readFile('index.html', function (err, data) {
 		  	if (err) throw err;
 			res.end(data);
