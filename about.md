@@ -7,7 +7,8 @@
 **GitHub：** [https://github.com/Tonyce](https://github.com/Tonyce)   
 
 **职业：** 写代码（`iOS(swift) js Node.js html`）     
-**理想职业：** 程序员
+**职业理想：** 程序员    
+**职业状态：** **失业中。。。** （哪个老板有合适的职位可以email我，谢谢先）
 
 **大学：** 山东科技大学     
 **专业：** 资源环境与城乡规划管理    

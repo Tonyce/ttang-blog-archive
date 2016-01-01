@@ -13,6 +13,11 @@
 			padding: 0;
 		}
 
+		p {
+			line-height: 1.3em;	
+		}
+		
+
 		header {
 			position: fixed;
 			top: 0;
@@ -300,10 +305,11 @@
 
 		(function () {
 			function makeRequest(url, callback) {
-				url = url
-				method = "GET"
-				body = ""
+				var url = url
+				var method = "GET"
+				var body = ""
 				var bodyStr = ""
+				var httpRequest = ""
 				if (window.XMLHttpRequest) { // Mozilla, Safari, ...
 					httpRequest = new XMLHttpRequest();
 				} else if (window.ActiveXObject) { // IE
@@ -349,14 +355,18 @@
 				for (var i = 0; i < data.length; i++) {
 					var item = data[i];
 					var cell = liCell;
-
-					cell = cell.replace("{{id}}", item.id)
-								.replace("{{title}}", item.title)
+					cell = cell.replace("{{id}}", item.id).replace("{{title}}", item.title)
 					str += cell;
 				};
-
 				blogTitle.innerHTML = str
 			})
+		}
+
+		function loadPreword () {
+			blogContent.innerHTML = window.loading;
+			makeRequest("/preword", function blog (data) {
+				blogContent.innerHTML = marked(data);
+			})	
 		}
 
 		function requestBlog (elem, event) {
@@ -364,29 +374,27 @@
 			var id = elem.getAttribute("id");
 			blogContent.innerHTML = window.loading;
 			makeRequest("/blog/"+id, function blog (data) {
-				console.log(data);
-				var time = setTimeout(function () {
-					blogContent.innerHTML = "window.loading";
-					clearTimeout(time)
-				}, 3000);
+				// console.log(data);
+				// var time = setTimeout(function () {
+					blogContent.innerHTML = "测试数据。。。";
+				// 	clearTimeout(time)
+				// }, 3000);
 			});
 		}
 
 		function about () {
 			blogContent.innerHTML = window.loading;
 			makeRequest("/about", function blog (data) {
-				console.log(data);
 				blogContent.innerHTML = marked(data);
 			})	
 		}
-
 	</script>
-
-	
 
 	<script type="text/javascript">
 		window.onload = function () {
-			requestTitle()
+			blogContent.innerHTML = window.loading;
+			requestTitle();
+			loadPreword();
 			var w = window,
 			    d = document,
 			    e = d.documentElement,

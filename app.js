@@ -40,9 +40,14 @@ function app (req, res) {
 	if (path === "/blogs") {
 		res.end(JSON.stringify(titles));
 	}else if ( idReg.test(path) ) {
-		res.end('{"title":"title", "content":"Content-Type", "time":"time"}')
+		res.end('{"title":"title", "content":"test", "time":"time"}')
 	}else if (path === "/about"){
 		fs.readFile('about.md', 'utf-8', function (err, data) {
+		  	if (err) throw err;
+			res.end(data);
+		});
+	} else if (path === "/preword"){
+		fs.readFile('preword.md', 'utf-8', function (err, data) {
 		  	if (err) throw err;
 			res.end(data);
 		});
