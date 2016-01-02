@@ -48,7 +48,7 @@ function app (req, res) {
 	if (path === "/") {
 		let record = new Date + ` -- ${clientIp} -- ${clientUa} \n`
 		// console.log(record)
-		fs.appendFile('log', record, function (err) {
+		fs.appendFile('./log/log', record, function (err) {
 			if (err) throw err;
 		});
 		if (index) {
