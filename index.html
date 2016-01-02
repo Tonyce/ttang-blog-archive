@@ -388,7 +388,10 @@
 			makeRequest("/blog/"+id, function blog (data) {
 				data = JSON.parse(data);
 				var content = data.content;
-				blogContent.innerHTML = marked(content);
+				var time = new Date();
+				content = marked(content);
+				content = content.replace("{{time}}", time);
+				blogContent.innerHTML = content;
 			});
 		}
 

@@ -1,6 +1,8 @@
 
 "use strict"
 
+
+var insertKey = "ttang·blog";
 var http = require("http");
 var fs = require("fs");
 var url = require('url');
@@ -86,7 +88,44 @@ function app (req, res) {
 		  	if (err) throw err;
 			res.end(data);
 		});
+	}else if (path === "/insert"){
+		parseBody(req, function (err, body) {
+			if (err) throw err;
+			let title = body.title;
+			let content = body.content;
+			let key = body.key;
+
+			if (key === insertKey) {
+				let blog = new Blog(null, title, content, null);
+				blog.save(function () {
+					res.end('{"ok":"ok"}');
+				})
+			}else {
+				res.writeHead(500);
+				res.end('{"err":"err"}');		
+			}
+		})
 	}else {
+		res.writeHead(500);
 		res.end('{"err":"err"}');
 	}
+}
+
+
+function parseBody(req, callback){
+    let body = '';
+    req.setEncoding('utf8');
+    req.on('data', function (chunk) {
+        body += chunk;
+    });
+    req.on('end', function () {
+        let data = null;
+        try {
+            data = JSON.parse(body);
+        } catch (er) {
+        	callback(er)
+        	return
+        }
+        callback(null, data);
+    });
 }

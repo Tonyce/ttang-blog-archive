@@ -41,11 +41,6 @@ class Blog {
 	}
 
 	save (callback) {
-		
-		if ((this._id instanceof _DBRef) == false) {
-			callback({err: "connot connect the author"})
-			return;
-		}
 
 		let collection = _db.collection(blogCollection);
 		collection.insertOne(this, (err, result) => {
