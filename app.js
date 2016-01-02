@@ -12,7 +12,6 @@ var ObjectID = require('mongodb').ObjectID;
 var Blog = require('./Blog.js');
 
 var index = fs.readFileSync('index.html');
-index = "";
 
 global._ObjectID = ObjectID;
 global._db = "";
