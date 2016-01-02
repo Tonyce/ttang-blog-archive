@@ -390,6 +390,11 @@
 		function requestBlog (elem, event) {
 			hiddenList()
 			var id = elem.getAttribute("id");
+			requestBlogA(id);
+		}
+
+		function requestBlogA (id) {
+			location.hash = id;
 			blogContent.innerHTML = window.loading;
 			makeRequest("/blog/"+id, function blog (data) {
 				data = JSON.parse(data);
@@ -402,6 +407,7 @@
 		}
 
 		function about () {
+			location.hash = "about";
 			blogContent.innerHTML = window.loading;
 			makeRequest("/about", function (data) {
 				blogContent.innerHTML = marked(data);
@@ -410,10 +416,33 @@
 	</script>
 
 	<script type="text/javascript">
+
+		function loadHash () {
+			var hash = location.hash;
+			hash = hash.replace("#", "");
+
+			if (hash === "about") {
+				about()
+			}else if (hash.length === 24) {
+				requestBlogA(hash);
+			}else {
+				// location.hash = "preword";	
+				loadPreword();
+			}
+		}
+
+		function locationHashChanged() {
+		    loadHash()
+		}
+		window.onhashchange = locationHashChanged;
+
 		window.onload = function () {
 			blogContent.innerHTML = window.loading;
 			requestTitle();
-			loadPreword();
+
+			location.hash = "preword";	
+			loadHash();
+
 			var w = window,
 			    d = document,
 			    e = d.documentElement,
