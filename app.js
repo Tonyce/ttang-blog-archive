@@ -5,22 +5,32 @@ var http = require("http");
 var fs = require("fs");
 var url = require('url');
 
-http.createServer(app).listen(8000);
+var MongoClient = require('mongodb').MongoClient
+var ObjectID = require('mongodb').ObjectID;
+var Blog = require('./Blog.js');
 
-let titles = [
-	{"id":"565050484fb15fc935b98404", "title":"需要多按几次按钮"},
-	{"id":"565050484fb15fc935b98404", "title":"单可能是程序BUG，需要多按几次按钮"},
-	{"id":"565050484fb15fc935b98404", "title":"单全删除空行的问题，可能是程序BUG，需要多按几次按钮"},
-	{"id":"565050484fb15fc935b98404", "title":"单（注意：EditPlus有时存在“全部替换”不能一次性完全删除空行的问题，可能是程序BUG，需要多按几次按钮"},
-	{"id":"565050484fb15fc935b98404", "title":"单击“替换”按钮逐个行删除空行，或单击“全部替换”按钮删除全部空行（注意：EditPlus有时存在“全部替换”不能一次性完全删除空行的问题，可能是程序BUG，需要多按几次按钮"},
-	{"id":"565050484fb15fc935b98404", "title":"单击“替换”按钮逐个行删除空行，或单击“全部替换”按钮删除全部空行（注意：EditPlus有时存在“全部替换”不能一次性完全删除空行的问题，可能是程序BUG，需要多按几次按钮"},
-	{"id":"565050484fb15fc935b98404", "title":"单击“替换”按钮逐个行删除空行，或单击“全部替换”按钮删除全部空行（注意：EditPlus有时存在“全部替换”不能一次性完全删除空行的问题，可能是程序BUG，需要多按几次按钮"},
-	{"id":"565050484fb15fc935b98404", "title":"单击“替换”按钮逐个行删除空行，或单击“全部替换”按钮删除全部空行（注意：EditPlus有时存在“全部替换”不能一次性完全删除空行的问题，可能是程序BUG，需要多按几次按钮"},
-	{"id":"565050484fb15fc935b98404", "title":"单击“替换”按钮逐个行删除空行，或单击“全部替换”按钮删除全部空行（注意：EditPlus有时存在“全部替换”不能一次性完全删除空行的问题，可能是程序BUG，需要多按几次按钮"},
-	{"id":"565050484fb15fc935b98404", "title":"单击“替换”按钮逐个行删除空行，或单击“全部替换”按钮删除全部空行（注意：EditPlus有时存在“全部替换”不能一次性完全删除空行的问题，可能是程序BUG，需要多按几次按钮"},
-	{"id":"565050484fb15fc935b98404", "title":"单击“替换”按钮逐个行删除空行，或单击“全部替换”按钮删除全部空行（注意：EditPlus有时存在“全部替换”不能一次性完全删除空行的问题，可能是程序BUG，需要多按几次按钮"},
-	{"id":"565050484fb15fc935b98404", "title":"单击“替换”按钮逐个行删除空行，或单击“全部替换”按钮删除全部空行（注意：EditPlus有时存在“全部替换”不能一次性完全删除空行的问题，可能是程序BUG，需要多按几次按钮"}
-]
+var index = fs.readFileSync('index.html');
+index = "";
+
+global._ObjectID = ObjectID;
+global._db = "";
+global._dataBase = "ttang";
+
+var mongoUrl = 'mongodb://localhost:27017/ttang';
+// Connect using MongoClient
+MongoClient.connect(mongoUrl, function(err, db) {
+  	
+  	if(err){
+		console.log("mongoClient open err", err)
+		return
+	}
+	_db = db;
+    if (!module.parent) {
+		http.createServer(app).listen(8000);
+		console.log('listening on port 8000', new Date());
+	}
+});
+
 
 function app (req, res) {
 	let reqMethod = req.method;
@@ -40,18 +50,32 @@ function app (req, res) {
 		fs.appendFile('log', record, function (err) {
 			if (err) throw err;
 		});
-		fs.readFile('index.html', function (err, data) {
-		  	if (err) throw err;
-			res.end(data);
-		});
+		if (index) {
+			res.end(index);
+		}else {
+			fs.readFile('index.html', function (err, data) {
+				console.log("should not goes there");
+			  	if (err) throw err;
+				res.end(data);
+			});	
+		}
 		return;
 	};
 
-	let idReg = /\/blog\/\S{24}$/
+	let idReg = /\/blog\/\S{24}$/;
 	if (path === "/blogs") {
-		res.end(JSON.stringify(titles));
+		Blog.findTitles(function (err, docs) {
+			res.end(JSON.stringify(docs));	
+		})
 	}else if ( idReg.test(path) ) {
-		res.end('{"title":"title", "content":"test", "time":"time"}')
+		let id = path.replace("/blog/", "");
+		let blogId = new _ObjectID(id);
+		let blog = new Blog(blogId);
+
+		blog.find(function () {
+			res.end(JSON.stringify(blog))
+		});
+
 	}else if (path === "/about"){
 		fs.readFile('about.md', 'utf-8', function (err, data) {
 		  	if (err) throw err;

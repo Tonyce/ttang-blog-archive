@@ -1,0 +1,11 @@
+{
+  "name": "TTang-blog",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "mongodb": "^2.1.2"
+  }
+}

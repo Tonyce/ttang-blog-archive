@@ -311,8 +311,6 @@
 				blogTitle.style.left = "-350px";
 				blogContent.style.position = ""
 			}
-			
-			// blogContent.style.display = "block";	
 		}
 	</script>
 	<script type="text/javascript">
@@ -369,7 +367,7 @@
 				for (var i = 0; i < data.length; i++) {
 					var item = data[i];
 					var cell = liCell;
-					cell = cell.replace("{{id}}", item.id).replace("{{title}}", item.title)
+					cell = cell.replace("{{id}}", item._id).replace("{{title}}", item.title)
 					str += cell;
 				};
 				blogTitle.innerHTML = str
@@ -378,7 +376,7 @@
 
 		function loadPreword () {
 			blogContent.innerHTML = window.loading;
-			makeRequest("/preword", function blog (data) {
+			makeRequest("/preword", function (data) {
 				blogContent.innerHTML = marked(data);
 			})	
 		}
@@ -388,17 +386,15 @@
 			var id = elem.getAttribute("id");
 			blogContent.innerHTML = window.loading;
 			makeRequest("/blog/"+id, function blog (data) {
-				// console.log(data);
-				// var time = setTimeout(function () {
-					blogContent.innerHTML = "测试数据。。。";
-				// 	clearTimeout(time)
-				// }, 3000);
+				data = JSON.parse(data);
+				var content = data.content;
+				blogContent.innerHTML = marked(content);
 			});
 		}
 
 		function about () {
 			blogContent.innerHTML = window.loading;
-			makeRequest("/about", function blog (data) {
+			makeRequest("/about", function (data) {
 				blogContent.innerHTML = marked(data);
 			})	
 		}
