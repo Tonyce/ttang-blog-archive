@@ -14,7 +14,7 @@
 		}
 
 		p {
-			line-height: 1.3em;	
+			line-height: 1.4em;	
 		}
 		
 
@@ -40,6 +40,12 @@
 			margin-top: 0;
 			margin-bottom: 0;
 
+		}
+
+		.time {
+			color: gray;
+			font-size: 0.7em;
+			padding-left: 30px;
 		}
 
 		#blogTitle li {
@@ -390,7 +396,7 @@
 				var content = data.content;
 				var time = new Date();
 				content = marked(content);
-				content = content.replace("{{time}}", time);
+				content = content.replace("{{time}}", '<div class="time"><i>'+time+'</i></div>');
 				blogContent.innerHTML = content;
 			});
 		}

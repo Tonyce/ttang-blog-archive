@@ -4,8 +4,8 @@ var fs = require("fs");
 
 var body = {
 	"key":"ttang·blog",
-	"title":"justdo",
-	"content": fs.readFileSync('preword.md', 'utf8')
+	"title":"Just Do It",
+	"content": fs.readFileSync('./blogs/JustDoIt.md', 'utf8')
 }
 
 var postData = JSON.stringify(body);
