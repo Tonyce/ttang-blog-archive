@@ -278,15 +278,11 @@
 	    </div>
     </header>
 
-	<!--  -->
-	<div id="blogContent" onclick="hiddenList()">
-		
+	<div id="blogContent" onclick="hiddenList()">	
 	</div>
-
 
 	<ul id="blogTitle" class="rightBoxShadow">			
 	</ul>
-
 
 	<script type="text/javascript">
 		window.loading = "<div class='base'><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div></div>"
@@ -440,8 +436,12 @@
 			blogContent.innerHTML = window.loading;
 			requestTitle();
 
-			location.hash = "preword";	
-			loadHash();
+			if (location.hash) {
+				loadHash();	
+			}else {
+				location.hash = "preword";	
+			}
+			
 
 			var w = window,
 			    d = document,
