@@ -87,6 +87,10 @@
 			transition: all 0.2s linear;
 		}
 
+		#messages {
+			margin-top: 50px;
+		}
+
 
 		#list-icon {
 			padding-top: 15px;
@@ -115,6 +119,38 @@
 		    /*fill: currentColor;*/
 		}
 
+		#commit {
+			max-width: 80%;
+			min-width: 80%;
+			height: 80px;
+		}
+
+		#msgs {
+			margin: 20px;
+		}
+
+		.mesCell {
+			width: 80%;
+			padding: 10px;
+			min-height: 30px;
+			border-top: solid 1px black;
+		}
+		.btn {
+			margin: 5px 15px;
+			width: 100px;
+			height: 30px;
+			text-align: center;
+			padding-top: 10px;
+			background-color: #2196F3;
+			color: white;
+			border-radius: 20px;
+			transition: all 0.2s linear;
+		}
+
+		.btn:hover {
+			cursor: pointer;
+			box-shadow:0 0 1px 1px gray,
+		}
 
 
 		#about, #stay {
@@ -144,7 +180,8 @@
 			border-radius: 50%;
 			border: solid 3px #2196F3 ;
 		}
-		 blockquote {
+
+		blockquote {
 	        margin-left: 15px;
 	        padding: 1px 10px;
 	        border-left: lightgray solid 5px;
@@ -168,6 +205,12 @@
 				margin-left: 0px;
 				padding: 10px;
 				/*display:none;*/
+			}
+
+
+			#commit {
+				max-width: 90%;
+				min-width: 90%;
 			}
 		}
 
@@ -292,6 +335,7 @@
     </header>
 
 	<div id="blogContent" onclick="hiddenList()">	
+
 	</div>
 
 	<ul id="blogTitle" class="rightBoxShadow">			
@@ -299,6 +343,24 @@
 
 	<script type="text/javascript">
 		window.loading = "<div class='base'><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div></div>"
+
+	</script>
+
+	<script type="text/template" id="messagesTemplate">
+		<div id="messages">
+			<h3>交流：</h3>
+			<textarea id="commit"></textarea>
+			<div id="commitBtn" class="btn" onclick="submit()">提交</div>
+			<div id="msgs">
+				{{msgs}}
+			</div>
+		</div>
+	</script>
+
+	<script type="text/template" id="messagesCell">
+		<div class="mesCell">
+			{{message}}
+		</div>
 	</script>
 
 	<script type="text/javascript">
@@ -374,6 +436,13 @@
 
 	<script type="text/javascript">
 
+		function submit () {
+			var mesValue = commit.value;
+			var mesCell = messagesCell.innerHTML;
+			mesCell = mesCell.replace("{{message}}", mesValue);
+			msgs.innerHTML = mesCell + msgs.innerHTML;
+		}
+
 		function highlightCode () {
 			var codeArr = document.getElementsByTagName("code");
 			for (var i = 0; i < codeArr.length; i++) {
@@ -416,10 +485,32 @@
 			makeRequest("/blog/"+id, function blog (data) {
 				data = JSON.parse(data);
 				var content = data.content;
-				var time = new Date();
+				var time = data.time || new Date();
 				content = marked(content);
 				content = content.replace("{{time}}", '<div class="time"><i>'+time+'</i></div>');
-				blogContent.innerHTML = content;
+
+				var messages = [
+					{"content":"a"},
+					{"content":"b"},
+					{"content":"c"}
+				]
+
+				var messagesHtml = messagesTemplate.innerHTML; //str
+
+				
+				var msgs = ""
+				for (var i = 0; i < messages.length; i++) {
+					var msgCell = messagesCell.innerHTML;
+					var msgContent = messages[i].content;
+
+					msgCell = msgCell.replace("{{message}}", msgContent);
+					msgs += msgCell;
+				};
+
+				messagesHtml = messagesHtml.replace("{{msgs}}", msgs);
+
+				blogContent.innerHTML = content + messagesHtml;
+				// blogContent.appendChild(messagesHtml);
 				highlightCode();
 			});
 		}

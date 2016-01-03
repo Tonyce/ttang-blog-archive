@@ -7,7 +7,7 @@
 **GitHub：** [https://github.com/Tonyce](https://github.com/Tonyce)   
 
 **职业：** 写代码   
-`iOS(swift) js Node.js html`     
+`iOS(swift) js Node.js html`  
 **职业理想：** 程序员    
 **职业状态：** **失业中。。。** （哪个北京老板有合适的职位可以Email我，谢谢先）
 
