@@ -5,7 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0" />
 	<title>TTang·blog</title>
 
-
 	<style type="text/css">
 
 		body {
@@ -17,6 +16,9 @@
 			line-height: 1.4em;	
 		}
 		
+		img {
+			width: 300px;
+		}
 
 		header {
 			position: fixed;
@@ -169,6 +171,11 @@
 			}
 		}
 
+		@media screen and (max-width: 350px){
+			img {
+				width: 90%;
+			}
+		}
 
 	</style>
 
@@ -249,8 +256,14 @@
 		  }
 		}
 	</style>
+
+	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/monokai-sublime.min.css"> -->
+
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/monokai.min.css">
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/highlight.min.js"></script>
 
 </head>
 <body class="">
@@ -361,6 +374,14 @@
 
 	<script type="text/javascript">
 
+		function highlightCode () {
+			var codeArr = document.getElementsByTagName("code");
+			for (var i = 0; i < codeArr.length; i++) {
+				var codeDom = codeArr[i];
+				hljs.highlightBlock(codeDom);
+			}
+		}
+
 		function requestTitle () {
 			var liCell = '<li id={{id}} onclick="requestBlog(this, event)" >{{title}}</li>'
 			makeRequest("/blogs", function blogs (data) {
@@ -380,6 +401,7 @@
 			blogContent.innerHTML = window.loading;
 			makeRequest("/preword", function (data) {
 				blogContent.innerHTML = marked(data);
+				highlightCode();
 			})	
 		}
 
@@ -388,7 +410,6 @@
 			var id = elem.getAttribute("id");
 			requestBlogA(id);
 		}
-
 		function requestBlogA (id) {
 			location.hash = id;
 			blogContent.innerHTML = window.loading;
@@ -399,6 +420,7 @@
 				content = marked(content);
 				content = content.replace("{{time}}", '<div class="time"><i>'+time+'</i></div>');
 				blogContent.innerHTML = content;
+				highlightCode();
 			});
 		}
 
@@ -407,6 +429,7 @@
 			blogContent.innerHTML = window.loading;
 			makeRequest("/about", function (data) {
 				blogContent.innerHTML = marked(data);
+				highlightCode();
 			})	
 		}
 	</script>
@@ -467,6 +490,7 @@
 				blogContent.style.display = ""
 			}
 		};
+
 	</script>
 </body>
 </html>

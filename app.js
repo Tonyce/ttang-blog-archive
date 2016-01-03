@@ -12,13 +12,14 @@ var ObjectID = require('mongodb').ObjectID;
 var Blog = require('./Blog.js');
 
 var index = fs.readFileSync('index.html');
+index = "";
 
 global._ObjectID = ObjectID;
 global._db = "";
 global._dataBase = "ttang";
 
 var mongoUrl = 'mongodb://localhost:27017/ttang';
-// Connect using MongoClient
+
 MongoClient.connect(mongoUrl, function(err, db) {
   	
   	if(err){
@@ -36,6 +37,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
 function app (req, res) {
 	let reqMethod = req.method;
 	let reqUrlObj = url.parse(req.url, true);
+
 	let path = reqUrlObj["pathname"].toLowerCase();
 	// let pathList = path.split('/');
 
@@ -45,9 +47,17 @@ function app (req, res) {
      				req.connection.socket.remoteAddress;
     let clientUa = req.headers['user-agent'];
 
+    if (path === "/favicon.ico") {
+		fs.readFile("favicon.ico", function (err, data) {
+			res.setHeader("Content-Type", "image/png");
+			res.setHeader("Cache-Control", "max-age=31536000");
+			res.end(data)
+		});
+		return;
+	}
+
 	if (path === "/") {
 		let record = new Date + ` -- ${clientIp} -- ${clientUa} \n`
-		// console.log(record)
 		fs.appendFile('./log/log', record, function (err) {
 			if (err) throw err;
 		});
@@ -55,7 +65,6 @@ function app (req, res) {
 			res.end(index);
 		}else {
 			fs.readFile('index.html', function (err, data) {
-				console.log("should not goes there");
 			  	if (err) throw err;
 				res.end(data);
 			});	

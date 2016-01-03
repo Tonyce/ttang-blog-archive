@@ -16,13 +16,12 @@ class Blog {
 
 	static findTitles (callback) {
 		let collection = _db.collection(blogCollection);	
-		collection.find({}, {"title": 1}).toArray(function(err, docs){
+		collection.find({}, {"title": 1}).sort({"time": -1}).toArray(function(err, docs){
 	        assert.equal(null, err);
 	        callback(null, docs);
 		});
 	}
 
-	// Find some documents
 	find (callback) {
 		if ((this._id instanceof _ObjectID) === false) {
 			callback({err: "this._id is illeagel"})
@@ -41,7 +40,6 @@ class Blog {
 	}
 
 	save (callback) {
-
 		let collection = _db.collection(blogCollection);
 		collection.insertOne(this, (err, result) => {
 			assert.equal(err, null);
