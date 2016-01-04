@@ -491,6 +491,11 @@
 
 		function submit () {
 			var comment = commit.value;
+
+			if (comment === "") {
+				alert("不能是空的");
+				return;
+			}
 			
 			var mesValue = marked(comment);
 
