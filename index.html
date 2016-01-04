@@ -84,6 +84,7 @@
 			/*padding-left: 50px;*/
 			margin-top: 60px;
 			margin-left: 350px;
+			margin-right: 50px;
 			transition: all 0.2s linear;
 		}
 
@@ -119,22 +120,65 @@
 		    /*fill: currentColor;*/
 		}
 
+
+
 		#commit {
-			max-width: 80%;
-			min-width: 80%;
+			max-width: 100%;
+			min-width: 100%;
 			height: 80px;
 		}
 
+		#commitBtn {
+			float: right;
+		}
+
+		#msgs, #commitContainer {
+			margin: 20px 10px 20px 0;
+		}
+
 		#msgs {
-			margin: 20px;
+			border-bottom: solid 1px black;
+		}
+
+		#commitContainer {
+			margin-bottom: 60px;
 		}
 
 		.mesCell {
-			width: 80%;
-			padding: 10px;
+			width: inherit;
+			padding: 10px 0;
 			min-height: 30px;
 			border-top: solid 1px black;
 		}
+
+		.cellMark {
+			float: left;
+			text-align: center;
+			color: #fff;
+			font-size: 1em;
+			border-radius: 20px;
+			padding-top: 12px;
+			height: 28px;
+			width: 40px;
+			background-color: #009688;
+		}
+
+
+
+		.cellContent {
+			margin-left: 60px;
+			padding-top: 10px;
+			min-height: 30px;
+			width: auto;
+		}
+
+		.cellTime {
+			margin-left: 20px;
+			font-size: 0.4em;
+			color: gray;
+		}
+
+
 		.btn {
 			margin: 5px 15px;
 			width: 100px;
@@ -188,6 +232,7 @@
 	        color: gray;
 	    }
 
+
 		@media screen and (max-width: 600px){
 
 			#list-icon {
@@ -203,15 +248,16 @@
 			#blogContent{
 				/*padding-left: 0px;*/
 				margin-left: 0px;
+				margin-right: 0px;
 				padding: 10px;
 				/*display:none;*/
 			}
 
-
-			#commit {
+			
+			/*#commit {
 				max-width: 90%;
 				min-width: 90%;
-			}
+			}*/
 		}
 
 		@media screen and (max-width: 350px){
@@ -300,9 +346,9 @@
 		}
 	</style>
 
-	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/monokai-sublime.min.css"> -->
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/monokai-sublime.min.css">
 
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/monokai.min.css">
+	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/monokai.min.css"> -->
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
@@ -343,14 +389,19 @@
 
 	<script type="text/javascript">
 		window.loading = "<div class='base'><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div></div>"
-
 	</script>
 
 	<script type="text/template" id="messagesTemplate">
 		<div id="messages">
-			<h3>交流：</h3>
-			<textarea id="commit"></textarea>
-			<div id="commitBtn" class="btn" onclick="submit()">提交</div>
+			<span style="font-size:1.3em; color:#009688">纠错或建议：</span>
+			<span style="font-size:0.6em; color:#80CBC4">支持markdown&nbsp;&nbsp;</span>
+			<span style="font-size:0.6em;">
+				<a href="http://www.ituring.com.cn/article/775" target="_blank"> markdown?</a>
+			</span>
+			<div id="commitContainer">
+				<textarea id="commit"></textarea>
+				<div id="commitBtn" class="btn" onclick="submit()">提交</div>
+			</div>
 			<div id="msgs">
 				{{msgs}}
 			</div>
@@ -359,7 +410,9 @@
 
 	<script type="text/template" id="messagesCell">
 		<div class="mesCell">
-			{{message}}
+			<div class="cellMark">{{i}}</div>
+			<span class="cellTime">{{commentTime}}</span>
+			<div class="cellContent">{{message}}</div>
 		</div>
 	</script>
 
@@ -393,11 +446,11 @@
 	<script type="text/javascript">
 
 		(function () {
-			function makeRequest(url, callback) {
+			function makeRequest(url, callback, method, postBody) {
 				var url = url
-				var method = "GET"
-				var body = ""
-				var bodyStr = ""
+				var method = method || "GET"
+				var body = postBody || "" 
+				var bodyStr = body ? JSON.stringify(body) : "";
 				var httpRequest = ""
 				if (window.XMLHttpRequest) { // Mozilla, Safari, ...
 					httpRequest = new XMLHttpRequest();
@@ -437,10 +490,40 @@
 	<script type="text/javascript">
 
 		function submit () {
-			var mesValue = commit.value;
-			var mesCell = messagesCell.innerHTML;
-			mesCell = mesCell.replace("{{message}}", mesValue);
-			msgs.innerHTML = mesCell + msgs.innerHTML;
+			var comment = commit.value;
+			
+			var mesValue = marked(comment);
+
+			var submitBody = {
+				id: location.hash.replace("#", ""),
+				comment: comment
+			}
+
+			makeRequest("/blog/comment", submitDone, "POST", submitBody); 
+
+			function submitDone (data) {
+				
+				data = JSON.parse(data);
+
+				if (data && data.err) {
+					alert(data.err);	
+					return;
+				}
+
+				commit.value = "";
+				var time = data.time;
+				var mesCell = messagesCell.innerHTML;
+				mesCell = mesCell.replace("{{message}}", mesValue)
+								 .replace("{{i}}", msgs.children.length + 1)
+								 .replace("{{commentTime}}", time);
+				msgs.innerHTML = mesCell + msgs.innerHTML;
+
+				var codeArr = msgs.getElementsByTagName("code");
+				for (var i = 0; i < codeArr.length; i++) {
+					var codeDom = codeArr[i];
+					hljs.highlightBlock(codeDom);
+				}	
+			}
 		}
 
 		function highlightCode () {
@@ -459,7 +542,8 @@
 				for (var i = 0; i < data.length; i++) {
 					var item = data[i];
 					var cell = liCell;
-					cell = cell.replace("{{id}}", item._id).replace("{{title}}", item.title)
+					cell = cell.replace("{{id}}", item._id)
+							   .replace("{{title}}", item.title)
 					str += cell;
 				};
 				blogTitle.innerHTML = str
@@ -485,32 +569,35 @@
 			makeRequest("/blog/"+id, function blog (data) {
 				data = JSON.parse(data);
 				var content = data.content;
+				var comments = data.comments;
+
 				var time = data.time || new Date();
 				content = marked(content);
 				content = content.replace("{{time}}", '<div class="time"><i>'+time+'</i></div>');
 
-				var messages = [
-					{"content":"a"},
-					{"content":"b"},
-					{"content":"c"}
-				]
+			 	comments = comments || []
 
 				var messagesHtml = messagesTemplate.innerHTML; //str
 
 				
 				var msgs = ""
-				for (var i = 0; i < messages.length; i++) {
-					var msgCell = messagesCell.innerHTML;
-					var msgContent = messages[i].content;
+				for (var i = comments.length - 1 ; i >= 0; i--) {
 
-					msgCell = msgCell.replace("{{message}}", msgContent);
+					var msgCell = messagesCell.innerHTML;
+					var msgContent = comments[i].comment;
+					var msgTime = comments[i].time;
+
+					msgCell = msgCell.replace("{{message}}", marked(msgContent))
+									 .replace("{{i}}", i+1)
+									 .replace("{{commentTime}}", msgTime);
+
+					// msgCell = marked(msgCell);
+
 					msgs += msgCell;
 				};
 
 				messagesHtml = messagesHtml.replace("{{msgs}}", msgs);
-
 				blogContent.innerHTML = content + messagesHtml;
-				// blogContent.appendChild(messagesHtml);
 				highlightCode();
 			});
 		}

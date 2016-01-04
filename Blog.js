@@ -35,6 +35,7 @@ class Blog {
 	        this.content = doc.content;
 	        this.category = doc.category;
 	        this.time = doc.time;
+	        this.comments = doc.comments;
 	        callback()
 		});
 	}
@@ -48,7 +49,54 @@ class Blog {
 	        callback()
 	    });
 	}
+
+	insertComment (comment, ip, callback) {
+		let collection = _db.collection(blogCollection);
+
+		// check ip time;
+		let time = new Date();
+		let compareTime = new Date().addDates(-1);
+
+		this.findComment(ip, compareTime, (err, comments) => {
+			
+			if (err || comments) {
+				callback({"err":"限制时间段内（24小时内一次）不能提交"});
+				return
+			}
+			let commentBody = {
+				"ip": ip,
+				"comment": comment,
+				"time": time
+			}
+
+			collection.update({_id: this._id}, {$push: {"comments": commentBody}}, (err, result) => {
+				assert.equal(err, null);
+		        callback(null, {"time": time});
+		    });
+		});
+	}
+
+	findComment(ip, compareTime, callback) {
+		let collection = _db.collection(blogCollection);
+		let query = {
+			"_id": this._id, 	
+			"comments": { 
+				"$elemMatch": { 
+					"ip": ip, 
+					"time": { $gt: compareTime } 
+				}
+			} 
+		}
+
+		collection.findOne(query, (err, doc) => {
+			callback(err, doc && doc.comments)
+		});
+	}
 }
 
+Date.prototype.addDates= function(d){
+    this.setDate(this.getDate() + d);
+    return this;
+}
 
 module.exports = Blog;

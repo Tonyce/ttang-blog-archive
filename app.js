@@ -73,6 +73,7 @@ function app (req, res) {
 	};
 
 	let idReg = /\/blog\/\S{24}$/;
+
 	if (path === "/blogs") {
 		Blog.findTitles(function (err, docs) {
 			res.end(JSON.stringify(docs));	
@@ -85,6 +86,18 @@ function app (req, res) {
 		blog.find(function () {
 			res.end(JSON.stringify(blog))
 		});
+	}else if (path === "/blog/comment") {
+		parseBody(req, function (err, body) {
+			let id = body.id;
+			let comment = body.comment;
+
+			let blogId = new _ObjectID(id);
+			let blog = new Blog(blogId);
+
+			blog.insertComment(comment, clientIp, function (err, data) {
+				res.end(JSON.stringify(err ? err : data));
+			});
+		})
 
 	}else if (path === "/about"){
 		fs.readFile('about.md', 'utf-8', function (err, data) {
