@@ -53,6 +53,11 @@ class Blog {
 	insertComment (comment, ip, callback) {
 		let collection = _db.collection(blogCollection);
 
+		if (!comment) {
+			callback({"err":"不接受空的"});
+			return;
+		};
+
 		// check ip time;
 		let time = new Date();
 		let compareTime = new Date().addDates(-1);
