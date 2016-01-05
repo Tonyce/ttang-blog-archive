@@ -485,48 +485,66 @@
 	</script>
 
 	<script type="text/javascript">
+		
+		(function () {
 
-		function submit () {
-			var comment = commit.value;
-
-			if (comment === "") {
-				alert("不能是空的");
-				return;
-			}
-			
-			var mesValue = marked(comment);
-
-			var submitBody = {
-				id: location.hash.replace("#", ""),
-				comment: comment
+			function regComment (comment) {
+				var msgContent = comment;
+				var domReg = /[\s\S]*\`\`\`([\r\n]*|[\n]*)[\s\S]*(<script[\s\S]*>|<div[\s\S]*>)[\s\S]*(<\/script>|<\/div>)[\s\S]*[\r\n]*|[\n]*\`\`\`[\s\S]*/;
+				var scriptReg = /[\s\S]*(<script[\s\S]*>|<div[\s\S]*>)[\s\S]*/;
+				if (!domReg.test(msgContent) && scriptReg.test(msgContent)) {
+					alert("请输入使用合法的markdown代码块(```)");
+					return false
+				}
+				return true
 			}
 
-			makeRequest("/blog/comment", submitDone, "POST", submitBody); 
-
-			function submitDone (data) {
-				
-				data = JSON.parse(data);
-
-				if (data && data.err) {
-					alert(data.err);	
+			window.submit = submit;
+			function submit () {
+				var comment = commit.value;
+				if (comment === "") {
+					alert("不能是空的");
 					return;
 				}
 
-				commit.value = "";
-				var time = data.time;
-				var mesCell = messagesCell.innerHTML;
-				mesCell = mesCell.replace("{{message}}", mesValue)
-								 .replace("{{i}}", msgs.children.length + 1)
-								 .replace("{{commentTime}}", time);
-				msgs.innerHTML = mesCell + msgs.innerHTML;
+				if (!regComment(comment)) {
+					return;
+				};
+				
+				var mesValue = marked(comment);
 
-				var codeArr = msgs.getElementsByTagName("code");
-				for (var i = 0; i < codeArr.length; i++) {
-					var codeDom = codeArr[i];
-					hljs.highlightBlock(codeDom);
-				}	
+				var submitBody = {
+					id: location.hash.replace("#", ""),
+					comment: comment
+				}
+
+				makeRequest("/blog/comment", submitDone, "POST", submitBody); 
+
+				function submitDone (data) {
+					
+					data = JSON.parse(data);
+
+					if (data && data.err) {
+						alert(data.err);	
+						return;
+					}
+
+					commit.value = "";
+					var time = data.time;
+					var mesCell = messagesCell.innerHTML;
+					mesCell = mesCell.replace("{{message}}", mesValue)
+									 .replace("{{i}}", msgs.children.length + 1)
+									 .replace("{{commentTime}}", time);
+					msgs.innerHTML = mesCell + msgs.innerHTML;
+
+					var codeArr = msgs.getElementsByTagName("code");
+					for (var i = 0; i < codeArr.length; i++) {
+						var codeDom = codeArr[i];
+						hljs.highlightBlock(codeDom);
+					}	
+				}
 			}
-		}
+		})()
 
 		function highlightCode () {
 			var codeArr = document.getElementsByTagName("code");
@@ -581,7 +599,6 @@
 
 				var messagesHtml = messagesTemplate.innerHTML; //str
 
-				
 				var msgs = ""
 				for (var i = comments.length - 1 ; i >= 0; i--) {
 
@@ -589,11 +606,11 @@
 					var msgContent = comments[i].comment;
 					var msgTime = comments[i].time;
 
+					// msgContent = regComment(msgContent);
+
 					msgCell = msgCell.replace("{{message}}", marked(msgContent))
 									 .replace("{{i}}", i+1)
 									 .replace("{{commentTime}}", msgTime);
-
-					// msgCell = marked(msgCell);
 
 					msgs += msgCell;
 				};
