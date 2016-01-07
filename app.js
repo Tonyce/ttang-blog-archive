@@ -126,6 +126,32 @@ function app (req, res) {
 				res.end('{"err":"err"}');		
 			}
 		})
+	}else if (path === "/update") {
+		parseBody(req, function (err, body) {
+			if (err) throw err;
+
+			let key = body.key;
+			if (key === insertKey) {
+				let title = body.title;
+				let content = body.content;
+				
+				let id = body.id;
+				let blogId = new _ObjectID(id);
+				let blog = new Blog(blogId, title, content, null);
+
+				let updateInfo = {
+					"title": title,
+					"content": content
+				}
+
+				blog.update(updateInfo, function () {
+					res.end('{"ok":"ok"}');
+				});
+			}else {
+				res.writeHead(500);
+				res.end('{"err":"err"}');		
+			}
+		})
 	}else {
 		res.writeHead(500);
 		res.end('{"err":"err"}');

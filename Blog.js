@@ -50,6 +50,14 @@ class Blog {
 	    });
 	}
 
+	update (updateInfo, callback) {
+        let collection = _db.collection(goingonCollection);
+        collection.updateOne({"_id": this._id}, {$set: updateInfo}, (err, result) => {
+            assert.equal(err, null);
+            callback()
+        });   
+    }
+
 	insertComment (comment, ip, callback) {
 		let collection = _db.collection(blogCollection);
 
