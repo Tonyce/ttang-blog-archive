@@ -1,5 +1,5 @@
 <br/>
-<img class="meImage" src="http://tonyce-web.oss-cn-hangzhou.aliyuncs.com/me-small.jpg">
+<img class="meImage" src="http://7o4yzj.com1.z0.glb.clouddn.com/me-small.jpg">
 <br>
 
 **姓名：** 谷传堂    

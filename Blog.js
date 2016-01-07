@@ -51,7 +51,7 @@ class Blog {
 	}
 
 	update (updateInfo, callback) {
-        let collection = _db.collection(goingonCollection);
+        let collection = _db.collection(blogCollection);
         collection.updateOne({"_id": this._id}, {$set: updateInfo}, (err, result) => {
             assert.equal(err, null);
             callback()
