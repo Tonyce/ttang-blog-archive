@@ -427,7 +427,7 @@
 
 	<script type="text/template" id="messagesTemplate">
 		<div class="read">
-			<div class="thumb" id="" onclick="thumbUp(this, event)">
+			<div class="thumb" id="thumbup" onclick="thumbUp(this, event)">
 	        	<div>
 	        		<svg class="icon thumb-icon"><use xlink:href="#icon-thumb_up"></use></svg>
 	        	</div>
@@ -435,7 +435,7 @@
 	    	</div>
 	    	&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<div class="thumb" id="" onclick="thumbDown(this, event)">
+			<div class="thumb" id="thumbdown" onclick="thumbDown(this, event)">
 	        	<div>
 	        		<svg class="icon thumb-icon"><use xlink:href="#icon-thumb_down"></use></svg>
 	        	</div>
@@ -539,15 +539,27 @@
 	</script>
 
 	<script type="text/javascript">
-	var i = 1;
 		function thumbUp(elem, e) {
-			// document.querySelector()	
-			i++
-			elem.querySelector("span").innerHTML = i
+			var id = location.hash.replace("#", "");
+			makeRequest("/blog/"+id+"/good", function blog (data) {
+				data = JSON.parse(data)
+				if (data.ok === 1) {
+					var before = Number(elem.querySelector("span").innerHTML);
+					elem.querySelector("span").innerHTML = before + 1	
+				}
+			})
 		}
 
 		function thumbDown(elem, e) {
-			elem.querySelector("span").innerHTML = i
+			var id = location.hash.replace("#", "");
+			makeRequest("/blog/"+id+"/bad", function blog (data) {
+				data = JSON.parse(data)
+				if (data.ok === 1) {
+					var before = Number(elem.querySelector("span").innerHTML);
+					elem.querySelector("span").innerHTML = before + 1	
+				}
+			})
+			// elem.querySelector("span").innerHTML = i
 		}
 
 		
@@ -655,7 +667,10 @@
 				data = JSON.parse(data);
 				var content = data.content;
 				var comments = data.comments;
-				var read = data.read || 0;
+				var read = data.read;
+				var good = data.good;
+				var bad = data.bad;
+
 
 				var time = data.time || new Date();
 				content = marked(content);
@@ -684,6 +699,8 @@
 
 				messagesHtml = messagesHtml.replace("{{msgs}}", msgs);
 				blogContent.innerHTML = content + messagesHtml;
+				thumbup.querySelector("span").innerHTML = good;
+				thumbdown.querySelector("span").innerHTML = bad;
 				highlightCode();
 			});
 		}

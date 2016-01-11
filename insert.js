@@ -3,17 +3,22 @@ var http = require("http");
 var fs = require("fs");
 
 var body = {
-	"key":"ttang·blog",
-	"title":"Just Do It",
-	"content": fs.readFileSync('./blogs/JustDoIt.md', 'utf8')
+	"key":"ttanglovejjing·blog",
+	// "key":"ttang·blog",
+	// "id":"568b5dbe238396b2579202cf",
+	"title":"iOS--view切换效果（Material Design Bubble Animation）",
+	"content": fs.readFileSync('./blogs/iOS--view切换效果（Bubble）.md', 'utf8')
+
 }
 
 var postData = JSON.stringify(body);
 var options = {
-	// hostname: '107.150.96.151',
-	hostname: 'localhost',
-	port: 8000,
+	hostname: '107.150.96.151',
+	port: 80,
+	// hostname: 'localhost',
+	// port: 8000,
 	path: '/insert',
+	// path: '/update',
 	method: 'POST',
 	headers: {
 		'Content-Type': 'application/json',

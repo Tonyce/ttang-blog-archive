@@ -68,7 +68,27 @@ class Blog {
     	let collection = _db.collection(blogCollection);
         collection.update({"_id": this._id}, { $inc: { read: 1} }, (err, result) => {
             assert.equal(err, null);
+            //console.log(result); //{ result: { ok: 1, nModified: 1, n: 1 },
             callback()
+        }); 
+    }
+
+    incGood (callback) {
+    	let collection = _db.collection(blogCollection);
+        collection.update({"_id": this._id}, { $inc: { good: 1} }, (err, result) => {
+            assert.equal(err, null);
+            //console.log(result); //{ result: { ok: 1, nModified: 1, n: 1 },
+            callback(null, result.result);
+        }); 
+    }
+
+    incBad (callback) {
+    	let collection = _db.collection(blogCollection);
+        collection.update({"_id": this._id}, { $inc: { bad: 1} }, (err, result) => {
+            assert.equal(err, null);
+
+            //console.log(result); //{ result: { ok: 1, nModified: 1, n: 1 },
+            callback(null, result.result)
         }); 
     }
 
