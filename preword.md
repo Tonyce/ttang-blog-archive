@@ -26,14 +26,3 @@
 
 新年，问候下：大家，都还好吗，都还是当初的模样吗？ 大家，元旦快乐！
 
-```js
-function aa() {
-	console.log("aa");
-}
-```
-
-```html
-<div>fsfsfs</div>
-```
-
-![](http://code4app.qiniudn.com/photo/5639e05d594b90b8358b7c8c_1.gif)

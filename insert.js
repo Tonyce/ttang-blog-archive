@@ -3,7 +3,6 @@ var http = require("http");
 var fs = require("fs");
 
 var body = {
-	"key":"ttanglovejjing·blog",
 	// "key":"ttang·blog",
 	// "id":"568b5dbe238396b2579202cf",
 	"title":"iOS--view切换效果（Material Design Bubble Animation）",
