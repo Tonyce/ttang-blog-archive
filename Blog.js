@@ -38,6 +38,7 @@ class Blog {
 		        this.content = doc.content;
 		        this.read = doc.read;
 		        this.good = doc.good;
+		        this.bad = doc.bad;
 		        this.category = doc.category;
 		        this.time = doc.time;
 		        this.comments = doc.comments;

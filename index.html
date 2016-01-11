@@ -541,7 +541,7 @@
 	<script type="text/javascript">
 		function thumbUp(elem, e) {
 			var id = location.hash.replace("#", "");
-			makeRequest("/blog/"+id+"/good", function blog (data) {
+			makeRequest("/blog/"+id+"/good", function (data) {
 				data = JSON.parse(data)
 				if (data.ok === 1) {
 					var before = Number(elem.querySelector("span").innerHTML);
@@ -552,7 +552,7 @@
 
 		function thumbDown(elem, e) {
 			var id = location.hash.replace("#", "");
-			makeRequest("/blog/"+id+"/bad", function blog (data) {
+			makeRequest("/blog/"+id+"/bad", function (data) {
 				data = JSON.parse(data)
 				if (data.ok === 1) {
 					var before = Number(elem.querySelector("span").innerHTML);
@@ -670,6 +670,8 @@
 				var read = data.read;
 				var good = data.good;
 				var bad = data.bad;
+
+				console.log(data);
 
 
 				var time = data.time || new Date();

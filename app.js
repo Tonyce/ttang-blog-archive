@@ -103,11 +103,12 @@ function app (req, res) {
 	}else if (goodBadReg.test(path)) {
 		let reg = /good|bad/;
 		let isWhat = path.match(reg)[0];
+
 		if ('good' === isWhat ) {
 			let id = path.replace("/blog/", "").replace("/good","");
 			let blogId = new _ObjectID(id);
 			let blog = new Blog(blogId);
-			blog.incBad((err, result) => {
+			blog.incGood((err, result) => {
 				res.end(JSON.stringify(result))
 			})
 			return
