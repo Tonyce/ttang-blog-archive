@@ -5,10 +5,12 @@ var assert = require('assert');
 const blogCollection = "blog"
 
 class Blog {
-	
 	constructor(_id, title, content, category) {
 		this._id = _id; //
 		this.title = title;
+		this.read = 0;
+		this.good = 0;
+		this.bad = 0;
 		this.content = content;
 		this.category = category;
 		this.time = new Date();
@@ -28,16 +30,20 @@ class Blog {
 			return;
 		}
 		let collection = _db.collection(blogCollection);	
-		collection.findOne({_id: this._id}, (err, doc) => {
-	        assert.equal(null, err);
-	        assert.notEqual(null, doc);
-	        this.title = doc.title;
-	        this.content = doc.content;
-	        this.category = doc.category;
-	        this.time = doc.time;
-	        this.comments = doc.comments;
-	        callback()
-		});
+		this.incRead(() => {
+			collection.findOne({_id: this._id}, (err, doc) => {
+		        assert.equal(null, err);
+		        assert.notEqual(null, doc);
+		        this.title = doc.title;
+		        this.content = doc.content;
+		        this.read = doc.read;
+		        this.good = doc.good;
+		        this.category = doc.category;
+		        this.time = doc.time;
+		        this.comments = doc.comments;
+		        callback()
+			});
+		})
 	}
 
 	save (callback) {
@@ -56,6 +62,14 @@ class Blog {
             assert.equal(err, null);
             callback()
         });   
+    }
+
+    incRead (callback) {
+    	let collection = _db.collection(blogCollection);
+        collection.update({"_id": this._id}, { $inc: { read: 1} }, (err, result) => {
+            assert.equal(err, null);
+            callback()
+        }); 
     }
 
 	insertComment (comment, ip, callback) {

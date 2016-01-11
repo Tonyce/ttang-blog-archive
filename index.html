@@ -21,6 +21,7 @@
 		}
 
 		header {
+			z-index: 100;
 			position: fixed;
 			top: 0;
 			width: 100%;
@@ -88,6 +89,11 @@
 			transition: all 0.2s linear;
 		}
 
+		.read {
+			width: auto;
+			height: 50px;
+		}
+
 		#messages {
 			margin-top: 50px;
 		}
@@ -120,7 +126,31 @@
 		    /*fill: currentColor;*/
 		}
 
+		.thumb-icon {
+			fill: #341414;
+		}
 
+		.thumb {
+			float: left;
+			width: 60px;
+			text-align: center;
+			height: 50px;
+			padding-top: 7px;
+			padding-bottom: 3px;
+			border-radius: 50%;
+			border: solid 1px black;
+			margin: 10px;
+		}
+
+		.thumb:hover {
+			cursor: pointer;
+		}
+
+		.thumb>span {
+			/*height: 40px;*/
+			font-size: 0.5em;
+			/*background-color: red;*/
+		}
 
 		#commit {
 			max-width: 100%;
@@ -360,6 +390,14 @@
 <title>list</title>
 <path class="path1" d="M0 0h256v256h-256zM384 64h640v128h-640zM0 384h256v256h-256zM384 448h640v128h-640zM0 768h256v256h-256zM384 832h640v128h-640z"></path>
 </symbol>
+<symbol id="icon-thumb_down" viewBox="0 0 1024 1024">
+<title>thumb_down</title>
+<path class="path1" d="M810 128h172v512h-172v-512zM640 128q34 0 60 26t26 60v426q0 34-26 60l-280 282-46-46q-18-18-18-44v-14l42-196h-270q-34 0-60-25t-26-59l2-4h-2v-82q0-16 6-32l130-300q20-52 78-52h384z"></path>
+</symbol>
+<symbol id="icon-thumb_up" viewBox="0 0 1024 1024">
+<title>thumb_up</title>
+<path class="path1" d="M982 426l-2 4h2v82q0 16-6 32l-130 300q-20 52-78 52h-384q-34 0-60-26t-26-60v-426q0-34 26-60l280-282 46 46q18 18 18 44v14l-42 196h270q34 0 60 25t26 59zM42 896v-512h172v512h-172z"></path>
+</symbol>
 </defs>
 </svg>
 
@@ -378,7 +416,6 @@
     </header>
 
 	<div id="blogContent" onclick="hiddenList()">	
-
 	</div>
 
 	<ul id="blogTitle" class="rightBoxShadow">			
@@ -389,6 +426,23 @@
 	</script>
 
 	<script type="text/template" id="messagesTemplate">
+		<div class="read">
+			<div class="thumb" id="" onclick="thumbUp(this, event)">
+	        	<div>
+	        		<svg class="icon thumb-icon"><use xlink:href="#icon-thumb_up"></use></svg>
+	        	</div>
+	        	<span>3</span>
+	    	</div>
+	    	&nbsp;&nbsp;&nbsp;&nbsp;
+
+			<div class="thumb" id="" onclick="thumbDown(this, event)">
+	        	<div>
+	        		<svg class="icon thumb-icon"><use xlink:href="#icon-thumb_down"></use></svg>
+	        	</div>
+	        	<span>4</span>
+	    	</div>
+
+		</div>
 		<div id="messages">
 			<span style="font-size:1.3em; color:#009688">纠错或建议：</span>
 			<span style="font-size:0.6em; color:#80CBC4">支持markdown&nbsp;&nbsp;</span>
@@ -428,7 +482,6 @@
 		}
 
 		function hiddenList () {
-
 			var w = window,
 			    d = document,
 			    e = d.documentElement,
@@ -486,6 +539,17 @@
 	</script>
 
 	<script type="text/javascript">
+	var i = 1;
+		function thumbUp(elem, e) {
+			// document.querySelector()	
+			i++
+			elem.querySelector("span").innerHTML = i
+		}
+
+		function thumbDown(elem, e) {
+			elem.querySelector("span").innerHTML = i
+		}
+
 		
 		(function () {
 
@@ -591,10 +655,12 @@
 				data = JSON.parse(data);
 				var content = data.content;
 				var comments = data.comments;
+				var read = data.read || 0;
 
 				var time = data.time || new Date();
 				content = marked(content);
-				content = content.replace("{{time}}", '<div class="time"><i>'+time+'</i></div>');
+				content = content.replace("{{time}}", 
+					'<div class="time"><i>'+time+'</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>阅读量：'+read+'</i></div>');
 
 			 	comments = comments || []
 
