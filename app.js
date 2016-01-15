@@ -41,6 +41,9 @@ function app (req, res) {
 	let path = reqUrlObj["pathname"].toLowerCase();
 	// let pathList = path.split('/');
 
+	path = path.replace("/ttblog", "");
+	// console.log(path);
+
 	let clientIp =  req.headers['x-forwarded-for'] || 
      				req.connection.remoteAddress || 
      				req.socket.remoteAddress ||
