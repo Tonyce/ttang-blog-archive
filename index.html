@@ -259,8 +259,23 @@
 	        color: gray;
 	    }
 
+	    #qrcodeC {
+	    	display: block;
+	    	float: right;
+	    	width:100px; 
+	    	height:100px; 
+	    	margin-top:-15px;
+	    }
+
+	    #qrcodeC img {
+	    	width: 100px;
+	    }
 
 		@media screen and (max-width: 600px){
+
+			#qrcodeC {
+		    	display: none;
+		    }
 
 			#list-icon {
 				display: block;
@@ -418,9 +433,18 @@
 	<div id="blogContent" onclick="hiddenList()">	
 	</div>
 
+	<button id="onMenuShareTimeline">onMenuShareTimeline</button>
+	<button id="onMenuShareAppMessage">onMenuShareAppMessage</button>
+	
+
 	<ul id="blogTitle" class="rightBoxShadow">			
 	</ul>
 
+	<!--二维码-->
+	<script type="text/javascript" src="http://7o4yzj.com1.z0.glb.clouddn.com/qrcode.min.js"></script>
+
+	<!--weixin-->
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 	<script type="text/javascript">
 		window.loading = "<div class='base'><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div><div class='cube'></div></div>"
 	</script>
@@ -442,7 +466,12 @@
 	        	<span>4</span>
 	    	</div>
 
+	    	<div id="qrcodeC">
+	    		<div id="qrcode"></div>
+	    		<div>&nbsp;[微信扫一扫]</div>
+	    	</div>
 		</div>
+
 		<div id="messages">
 			<span style="font-size:1.3em; color:#009688">纠错或建议：</span>
 			<span style="font-size:0.6em; color:#80CBC4">支持markdown&nbsp;&nbsp;</span>
@@ -666,13 +695,28 @@
 			blogContent.innerHTML = window.loading;
 			makeRequest("/blog/"+id, function blog (data) {
 				data = JSON.parse(data);
+				var weixinConfig = data.weixinConfig;
 				var content = data.content;
 				var comments = data.comments;
 				var read = data.read;
 				var good = data.good;
 				var bad = data.bad;
 
-				console.log(data);
+				console.log(weixinConfig);
+
+
+  				wx.config({
+			      debug: true,
+			      appId: 'wx10ee54e66df3785d',
+			      timestamp: weixinConfig.timestamp,
+			      nonceStr: weixinConfig.nonceStr,
+			      signature: weixinConfig.signature,
+			      jsApiList: [
+			        'checkJsApi',
+			        'onMenuShareTimeline',
+			        'onMenuShareAppMessage'
+			      ]
+			  	});
 
 
 				var time = data.time || new Date();
@@ -705,6 +749,18 @@
 				thumbup.querySelector("span").innerHTML = good;
 				thumbdown.querySelector("span").innerHTML = bad;
 				highlightCode();
+
+				// 二维码
+				var qrcode = new QRCode(document.getElementById("qrcode"), {
+					width : 100,
+					height : 100
+				});
+
+				function makeCode () {		
+					var value = location.href;
+					qrcode.makeCode(value);
+				}
+				makeCode();
 			});
 		}
 
@@ -714,7 +770,7 @@
 			makeRequest("/about", function (data) {
 				blogContent.innerHTML = marked(data);
 				highlightCode();
-			})	
+			});	
 		}
 	</script>
 
@@ -776,5 +832,79 @@
 		};
 
 	</script>
+	
+	<script type="text/javascript">
+
+	    wx.ready(function () {
+			// 1 判断当前版本是否支持指定 JS 接口，支持批量判断
+			alert("ready")
+			// document.querySelector('#checkJsApi').onclick = function () {
+				// wx.checkJsApi({
+				// 	jsApiList: [
+				// 		'getNetworkType',
+				// 		'previewImage'
+				// 	],
+				// 	success: function (res) {
+				// 		alert(JSON.stringify(res));
+				// 	},
+					
+				// });
+			// };
+
+			// 2. 分享接口
+			// 2.1 监听“分享给朋友”，按钮点击、自定义分享内容及分享结果接口
+			// document.querySelector('#onMenuShareAppMessage').onclick = function () {
+				wx.onMenuShareAppMessage({
+					title: '互联网之子',
+					desc: '在长大的过程中，我才慢慢发现，我身边的所有事，别人跟我说的所有事，那些所谓本来如此，注定如此的事，它们其实没有非得如此，事情是可以改变的。更重要的是，有些事既然错了，那就该做出改变。',
+					link: 'http://movie.douban.com/subject/25785114/',
+					imgUrl: 'http://demo.open.weixin.qq.com/jssdk/images/p2166127561.jpg',
+					trigger: function (res) {
+						// 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+						alert('用户点击发送给朋友');
+					},
+					success: function (res) {
+						alert('已分享');
+					},
+					cancel: function (res) {
+						alert('已取消');
+					},
+					fail: function (res) {
+						alert(JSON.stringify(res));
+					}
+				});
+				// alert('已注册获取“发送给朋友”状态事件');
+			//};
+
+			// 2.2 监听“分享到朋友圈”按钮点击、自定义分享内容及分享结果接口
+			// document.querySelector('#onMenuShareTimeline').onclick = function () {
+				wx.onMenuShareTimeline({
+					title: '互联网之子',
+					link: 'http://movie.douban.com/subject/25785114/',
+					imgUrl: 'http://demo.open.weixin.qq.com/jssdk/images/p2166127561.jpg',
+					trigger: function (res) {
+						// 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+						alert('用户点击分享到朋友圈');
+					},
+					success: function (res) {
+						alert('已分享');
+					},
+					cancel: function (res) {
+						alert('已取消');
+					},
+					fail: function (res) {
+						alert(JSON.stringify(res));
+					}
+				});
+				// alert('已注册获取“分享到朋友圈”状态事件');
+			// };
+		});
+		wx.error(function(res){
+			alert("error")
+		    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+
+		});
+	</script>
+
 </body>
 </html>

@@ -3,20 +3,22 @@ var http = require("http");
 var fs = require("fs");
 
 var body = {
+	"key": "ttanglovejjing·blog",
 	// "key":"ttang·blog",
 	// "id":"568b5dbe238396b2579202cf",
-	"title":"iOS--view切换效果（Material Design Bubble Animation）",
-	"content": fs.readFileSync('./blogs/iOS--view切换效果（Bubble）.md', 'utf8')
+	"title":"又一次离年远去",
+	"content": fs.readFileSync('./blogs/又一次离年远去.md', 'utf8')
 
 }
 
 var postData = JSON.stringify(body);
 var options = {
-	hostname: '107.150.96.151',
+	hostname: 'tonyce.top',
 	port: 80,
+	path: '/ttblog/insert',
 	// hostname: 'localhost',
 	// port: 8000,
-	path: '/insert',
+	// path: '/insert',
 	// path: '/update',
 	method: 'POST',
 	headers: {

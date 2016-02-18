@@ -4,8 +4,12 @@
 
 var insertKey = "ttang·blog";
 var http = require("http");
+var https = require("https");
 var fs = require("fs");
 var url = require('url');
+var sign = require('./weixin-sign.js');
+var WeixinAuth = require('./weixin-auth');
+let weixinAuth = new WeixinAuth();
 
 var MongoClient = require('mongodb').MongoClient
 var ObjectID = require('mongodb').ObjectID;
@@ -83,13 +87,42 @@ function app (req, res) {
 			res.end(JSON.stringify(docs));	
 		})
 	}else if ( idReg.test(path) ) {
+		// console.log(path)
 		let id = path.replace("/blog/", "");
 		let blogId = new _ObjectID(id);
 		let blog = new Blog(blogId);
 
 		blog.find(function () {
-			res.end(JSON.stringify(blog))
+			// console.log(weixinAuth.jsapiTicketIsValuable())
+			if (weixinAuth.jsapiTicketIsValuable()) {
+				endBlog();		
+			}else {
+				weixinAuth.requestAccessToken()
+					.then(function(accessToken) {
+						weixinAuth.setAccessToken(accessToken);
+						weixinAuth.requestJsapiTicket()
+							.then(function(jsapiTicket) {
+								weixinAuth.setJsapiTicket(jsapiTicket)
+								endBlog()
+							})
+							.catch(function(err) {
+								endBlog(err)
+							})
+					})
+					.catch(function(err) {
+						endBlog(err);	
+					})
+			}
 		});
+
+		function endBlog(err) {
+			blog.err = err;
+			// console.log("weixinAuth.jsapiTicket", weixinAuth.jsapiTicket);
+			// console.log('http://' + req.host + req.url)
+			blog.weixinConfig = sign(weixinAuth.jsapiTicket, "http://tonyce.top/ttblog/");
+			res.end(JSON.stringify(blog));
+		}
+					
 	}else if (path === "/blog/comment") {
 		parseBody(req, function (err, body) {
 			let id = body.id;
